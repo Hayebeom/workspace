@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="user">
+	<insert id="insertUser" parameterType="kr.co.jhta.vo.User">
+		insert into spring_users
+		(user_id, user_name, user_password, user_email, user_created_date)
+		values
+<!-- 	(?, ?, ?, ?, sysdate) -->
+		(#{id}, #{name}, #{password}, #{email}, sysdate)
+	</insert>
+	
+	<delete id="deleteAllUsers" >
+		delete from spring_users
+	</delete>
+	
+	<delete id="deleteUserById" parameterType="string">
+		delete from spring_users
+		<!--where user_id = ? -->
+		where user_id = #{value}
+	</delete>
+	
+	<update id="updateUser" parameterType="kr.co.jhta.vo.User">
+		update spring_users
+		set 
+			user_name	= #{name},
+			user_password = #{password},
+			user_email	= #{email}
+	<!-- where = ? -->
+		where user_id = #{id}
+	</update>
+	<!-- 
+		mybatis가 select문을 실행하는 절차
+			1. 파라미터가 없고, N행 N열의 결과가 조회될 때
+				* resultType에 지정된 객체를 여러 개 담을 수 있는 List객체를 생성
+				* 쿼리문을 실행
+				* ResultSet 처리
+					* User객체 생성
+					* 컬럼명과 동일한 이름의 변수(setter메서드)를 찾아서 객체에 값을 담음
+					* 한 행의 값이 저장된 User객체를 List객체에 추가
+					* 위의 과정을 반복
+				* 리소스를 해제
+				* List객체를 반환
+	 -->	
+	<select id="getAllUsers" resultType="kr.co.jhta.vo.User">
+		select
+			user_id				as id,
+			user_name			as name,
+			user_password		as password,
+			user_email			as email,
+			user_created_date	as createdDate
+		from
+			spring_users
+		order by
+			user_id asc
+	</select>
+	
+	<select id="getUsersByName" parameterType="string" resultType="kr.co.jhta.vo.User">
+		select
+			user_id				as id,
+			user_name			as name,
+			user_password		as password,
+			user_email			as email,
+			user_created_date	as createdDate
+		from
+			spring_users
+		where
+		<!-- user_name = ? -->
+			user_name like '%' || #{value} || '%'
+	</select>
+	
+	<!-- 
+		parameterType이 int, long, double, boolean, string인 경우
+		#{value}를 사용해서 전달받은 값이 치환될 곳을 지정
+	 -->
+	<select id="getUserById" parameterType="string" resultType="kr.co.jhta.vo.User">
+		select
+			user_id				as id,
+			user_name			as name,
+			user_password		as password,
+			user_email			as email,
+			user_created_date	as createdDate
+		from
+			spring_users
+		where
+<!-- 		user_id = ?		value는 파라미터를 의미하는 듯 -->
+			user_id = #{value}
+ 	</select>
+ 	
+ 	<!-- 
+ 		1행 1열 값이 조회되는 경우
+ 			조회된 값이 resultType에 지정된 값의 타입과 일치하면 조회된 결과가 반환됨
+ 	 -->
+ 	<select id="getUsersCount" resultType="int">
+ 		select count(*)	<!-- 별칭 필요없음 -->
+ 		from spring_users
+ 	</select>
+ 	
+</mapper>

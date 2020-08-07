@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="blog">
+
+	<insert id="insertBlog" parameterType="kr.co.jhta.vo.Blog">
+		insert into spring_blogs
+		(blog_no, blog_title, blog_writer, blog_content)
+		values
+		(spring_blog_seq.nextval, #{title}, #{writer}, #{content})
+	</insert>
+	
+	<select id="getAllBlogs" resultType="kr.co.jhta.dto.BlogDto">
+		select
+		        user_id 			as userId,
+		        user_name 			as userName,
+		        user_email 			as userEmail,
+		        user_created_date 	as userCreatedDate,
+		        blog_no 			as blogNo,
+		        blog_title 			as blogTitle,
+		        blog_writer 		as blogWriter,
+		        blog_content 		as blogContent,
+		        blog_likes 			as blogLikes,
+		        blog_comment_counts as blogCommentCounts,
+		        blog_create_date 	as blogCreadtedDate
+		from 
+		        spring_users A, spring_blogs B
+		where
+		        A.user_id = B.blog_writer
+	</select>
+	
+	<select id="getBlogByNo" parameterType="int" resultType="kr.co.jhta.dto.BlogDto">
+		select
+		        user_id 			as userId,
+		        user_name 			as userName,
+		        user_email 			as userEmail,
+		        user_created_date 	as userCreatedDate,
+		        blog_no 			as blogNo,
+		        blog_title 			as blogTitle,
+		        blog_writer 		as blogWriter,
+		        blog_content 		as blogContent,
+		        blog_likes 			as blogLikes,
+		        blog_comment_counts as blogCommentCounts,
+		        blog_create_date 	as blogCreadtedDate
+		from
+		        spring_users A, spring_blogs B
+		where 
+		        A.user_id = B.blog_writer AND blog_no = #{value}
+	</select>
+	
+	<update id="updateBlog" parameterType="kr.co.jhta.dto.BlogDto">
+		update 
+        		spring_blogs
+		set
+        		blog_title = #{title},
+	    	    blog_writer = #{writer},
+	    	    blog_content = #{content}
+		where
+        		blog_no = #{no}
+	</update>
+</mapper>

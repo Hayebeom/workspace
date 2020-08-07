@@ -1,0 +1,21 @@
+package kr.co.jhta.form;
+
+public class OrderForm {
+	
+	// 주문정보 관련
+	private String username;
+	private String usertel;
+	private long productNo;
+	private int amount;
+	private long price;
+	
+	// 결재관련
+	private String payType;
+	private String payAccount;
+	
+	// 배송관련
+	private String receiverUsername;
+	private String receiverUser;
+	private String receiverAddress;
+	
+}

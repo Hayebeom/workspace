@@ -1,0 +1,29 @@
+package kr.co.jhta.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import kr.co.jhta.dao.UserDao;
+import kr.co.jhta.vo.User;
+
+@Transactional
+@Service
+// 스캔되게
+public class UserServiceImpl implements UserService {
+
+	@Autowired
+	// 구현해서 스프링 빈으로 등록했기 때문에 구현객체가 등록됬다, 이를 wire한것이다?
+	UserDao userDao;
+	
+	@Override
+	public void addNewUser(User user) {
+		userDao.insertUser(user);
+	}
+	
+	@Override
+	public User getUserDetail(String userId) {
+		return userDao.getUserById(userId);
+	}
+	
+}

@@ -1,0 +1,40 @@
+package kr.co.jhta.web;
+
+import javax.validation.Valid;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import kr.co.jhta.form.LoginForm;
+
+@Controller
+public class SignInOutController {
+
+	@GetMapping("/signin.do")
+	public String signIn(Model model) {
+		LoginForm loginForm = new LoginForm();
+		model.addAttribute("loginForm", loginForm);
+		
+		return "loginform";
+	}
+	
+	@PostMapping("/signin.do")
+	public String login(@ModelAttribute("loginForm") @Valid LoginForm loginForm, BindingResult errors) {
+		//// @Valid : 유효한 값인지 검사
+		//// UserForm에 데이터를 넣고 @Valid로 유효성 검사를 한 뒤, 바로 뒤에 있는 BindingResult로 에러 데이터를 담아놓음 (에러가 발생했다면 들어감)
+		//// UserForm 과 BindingResult 사이에 변수가 있으면 안됨
+		
+		if (errors.hasErrors()) {
+			return "loginform";
+		}
+		
+		// 로그인 처리
+		
+		return "/home.do";
+	}
+	
+}

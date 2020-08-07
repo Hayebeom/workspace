@@ -1,0 +1,23 @@
+package kr.co.jhta.vo;
+
+import java.util.List;
+
+public class UrlRole {
+	
+	private String path;
+	private List<String> roles;
+	
+	public String getPath() {
+		return path;
+	}
+	public void setPath(String path) {
+		this.path = path;
+	}
+	public List<String> getRoles() {
+		return roles;
+	}
+	public void setRole(List<String> roles) {
+		this.roles = roles;
+	}
+	
+}

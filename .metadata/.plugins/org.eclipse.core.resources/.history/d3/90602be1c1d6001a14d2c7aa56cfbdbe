@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xsi:schemaLocation="http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+<!-- 
+	여러 spring container에서 공통으로 사용하는 기능을 여기에 생성, 각 sc가 참조하게 함 
+	ex) Service, DAO, TX, DataSource
+-->
+	<!-- database 연결정보 읽어오는 빈 설정 -->
+	<context:property-placeholder location="classpath:/META-INF/config/database.properties"/>
+	
+	<!-- 
+		커넥션 풀 빈 설정
+	 -->
+	<bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource">
+		<property name="driverClassName" value="${db.driverClassName}"></property>
+		<property name="url" value="${db.url}"></property>
+		<property name="username" value="${db.username}"></property>
+		<property name="password" value="${db.password}"></property>
+	</bean>
+	
+	<!-- 트랜잭션 처리 -->
+	<!-- 트랜잭션 매니저 객체를 스프링의 빈으로 등록하기 -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	
+	<!-- 
+		mybatis SqlSessionFactory 빈 설정
+	 -->
+	<bean class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="classpath:/META-INF/mybatis/mybatis-config.xml"/>
+	</bean>
+	
+	<!-- 
+		Mapper Interface(BoardDao 인터페이스)를 스캔해서
+		Mapper Instance(BoardDao 인터페이스의 구현객체)를 생성하고,
+		스프링 빈으로 등록하는 MapperScannerConfigurer 빈 설정
+	 -->
+	 <mybatis-spring:scan base-package="kr.co.jhta.dao"/>
+	
+	<!-- 
+		업무로직이 구현된 xxxServiceImpl 스프링 빈으로 등록하고 조립시키기
+	 --> 
+	 <context:annotation-config />
+	 <context:component-scan base-package="kr.co.jhta.service" />
+</beans>
